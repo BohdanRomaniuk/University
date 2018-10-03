@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DAL.Implementation;
+using DAL.Interfaces;
+using DAL.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,6 +30,7 @@ namespace University
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<UniversityContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:University"]));
+            services.AddScoped<IRepository<Student>, Repository<Student>>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
