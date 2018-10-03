@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using BLL.Implementation;
 using BLL.Interfaces;
 using DAL.Implementation;
@@ -28,16 +30,24 @@ namespace University
 
         public IConfiguration Configuration { get; }
 
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<UniversityContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:University"]));
-            services.AddScoped<IRepository<Group>, Repository<Group>>();
-            services.AddScoped<IRepository<Student>, Repository<Student>>();
-            services.AddScoped<IRepository<Teacher>, Repository<Teacher>>();
-            services.AddScoped<IService<Group>, GroupService>();
-            services.AddScoped<IService<Student>, StudentService >();
-            services.AddScoped<IService<Teacher>, TeacherService>();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            // Add framework services.
+            services.AddMvc();
+            services.AddDbContext<UniversityContext>(options => options.UseSqlServer(Configuration["ConnectionString:University"]));
+
+            //Now register our services with Autofac container
+            var builder = new ContainerBuilder();
+            builder.RegisterType<Repository<Group>>().As<IRepository<Group>>();
+            builder.RegisterType<Repository<Student>>().As<IRepository<Student>>();
+            builder.RegisterType<Repository<Teacher>>().As<IRepository<Teacher>>();
+            builder.RegisterType<GroupService>().As<IService<Group>>();
+            builder.RegisterType<StudentService>().As<IService<Student>>();
+            builder.RegisterType<TeacherService>().As<IService<Teacher>>();
+            builder.Populate(services);
+            var container = builder.Build();
+            //Create the IServiceProvider based on the container.
+            return new AutofacServiceProvider(container);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
