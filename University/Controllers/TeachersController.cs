@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace University.Controllers
 {
-    public class Class
+    public class TeachersController
     {
     }
 }

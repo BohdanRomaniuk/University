@@ -1,11 +1,13 @@
-﻿using System;
+﻿using DAL.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
 namespace DAL.Implementation
 {
-    public class Repository<TEntity> where TEntity : class
+    public class Repository<TEntity> : IRepository<TEntity>
+        where TEntity : class
     {
         private readonly UniversityContext Context;
 
