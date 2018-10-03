@@ -3,7 +3,7 @@ using DAL.Interfaces;
 using DAL.Models;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace BLL.Implementation
 {
@@ -23,7 +23,7 @@ namespace BLL.Implementation
 
         public Student Get(int id)
         {
-            throw new NotImplementedException();
+            return StudentRepository.Get(s=>s.Id==id).FirstOrDefault();
         }
 
         public IEnumerable<Student> Get()

@@ -14,14 +14,11 @@ namespace DAL.Implementation
         {
         }
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=University;Trusted_Connection=True;");
-        //}
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
-
+            builder.Entity<Student>().ToTable("Students");
+            builder.Entity<Teacher>().ToTable("Teacher");
+            builder.Entity<Group>().ToTable("Groups");
         }
     }
 }

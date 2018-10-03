@@ -28,16 +28,18 @@ namespace University
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<UniversityContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:University"]));
+            services.AddScoped<IRepository<Group>, Repository<Group>>();
             services.AddScoped<IRepository<Student>, Repository<Student>>();
+            services.AddScoped<IRepository<Teacher>, Repository<Teacher>>();
+            services.AddScoped<IService<Group>, GroupService>();
             services.AddScoped<IService<Student>, StudentService >();
+            services.AddScoped<IService<Teacher>, TeacherService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
