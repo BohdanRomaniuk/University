@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers
 {
     [Route("api/[controller]")]
-    public class StudentController : BaseController<Student>
+    public class GroupController : BaseController<Group>
     {
-        public StudentController(IService<Student> service)
+        public GroupController(IService<Group> service)
             : base(service)
         {
             _service = service;
