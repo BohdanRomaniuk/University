@@ -1,8 +1,11 @@
-﻿using BLL.Interfaces;
+﻿using API.Filters;
+using BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace API.Controllers
 {
+    
     public abstract class BaseController<TModel> : Controller
     {
         protected IService<TModel> _service;
@@ -12,9 +15,12 @@ namespace API.Controllers
             _service = service;
         }
 
+        [CustomExceptionFilter]
         [HttpGet]
         public virtual IActionResult Get()
         {
+            int x = 0;
+            int y = 8 / x;
             return Ok(_service.Get());
         }
 

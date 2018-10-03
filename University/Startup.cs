@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Filters;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using BLL.Implementation;
@@ -33,11 +34,14 @@ namespace University
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddMvc();
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(new CustomExceptionFilterAttribute());
+            });
             services.AddDbContext<UniversityContext>(options => options.UseSqlServer(Configuration["ConnectionString:University"]));
 
             //Now register our services with Autofac container
-            var builder = new ContainerBuilder();
+            ContainerBuilder builder = new ContainerBuilder();
             builder.RegisterType<Repository<Group>>().As<IRepository<Group>>();
             builder.RegisterType<Repository<Student>>().As<IRepository<Student>>();
             builder.RegisterType<Repository<Teacher>>().As<IRepository<Teacher>>();
@@ -45,7 +49,7 @@ namespace University
             builder.RegisterType<StudentService>().As<IService<Student>>();
             builder.RegisterType<TeacherService>().As<IService<Teacher>>();
             builder.Populate(services);
-            var container = builder.Build();
+            IContainer container = builder.Build();
             //Create the IServiceProvider based on the container.
             return new AutofacServiceProvider(container);
         }
